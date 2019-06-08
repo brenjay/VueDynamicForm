@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Dynamic Form</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <DynamicForm
+        :fields="
+      [
+      {
+        name: 'Assignee',
+        code: 'AD',
+        type: 'array',
+        value: null,
+        options: [{value: 1, name: 'test'},{value: 2, name: 'test2'}],
+      },
+      {
+        name: 'Issue Type',
+        code: 'AX',
+        type: 'option',
+        value: null,
+      },
+      {
+        name: 'Due Date',
+        code: 'AS',
+        type: 'date',
+        value: null,
+      }
+      ]"
+        :show="[2]"
+      ></DynamicForm>
+    </div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
