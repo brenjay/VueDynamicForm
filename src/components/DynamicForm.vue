@@ -3,36 +3,39 @@
   <div>
     <form>
       <table>
-        <tr v-for="(row, index) in selectedFields" :key="index">
-          <div class="form-group">
-            <td>
-              <label :for="row.code">{{row.name}}: &nbsp;</label>
-            </td>
-            <td>
-              <template v-if="row.type === 'array'">
-                <select class="form-control" :id="row.code" v-model="row.value">
-                  <option
-                    v-for="(option, index) in row.options"
-                    :key="index"
-                    :value="option.value"
-                  >{{option.name}}</option>
-                </select>
-              </template>
-              <template v-else-if="row.type === 'date'">
-                <datepicker input-class="form-control" :id="row.code" v-model="row.value"></datepicker>
-              </template>
-              <template v-else>
-                <input
-                  class="form-control"
-                  :id="row.code"
-                  :type="row.type"
-                  v-model="row.value"
-                  :value="row.value"
-                >
-              </template>
-            </td>
-          </div>
-        </tr>
+        <draggable v-model="selectedFields" group="fields" @start="drag=true" @end="drag=false">
+          <tr v-for="(row, index) in selectedFields" :key="index">
+            <div class="form-group">
+              <td>
+                <label :for="row.code">{{row.name}}: &nbsp;</label>
+              </td>
+              <td>
+                <template v-if="row.type === 'array'">
+                  <select class="form-control" :id="row.code" v-model="row.value">
+                    <option
+                      v-for="(option, index) in row.options"
+                      :key="index"
+                      :value="option.value"
+                    >{{option.name}}</option>
+                  </select>
+                </template>
+                <template v-else-if="row.type === 'date'">
+                  <datepicker input-class="form-control" :id="row.code" v-model="row.value"></datepicker>
+                </template>
+                <template v-else>
+                  <input
+                    class="form-control"
+                    :id="row.code"
+                    :type="row.type"
+                    v-model="row.value"
+                    :value="row.value"
+                  >
+                </template>
+              </td>
+              <td><div slot="footer">⚙️</div></td>
+            </div>
+          </tr>
+        </draggable>
       </table>
     </form>
     <button class="btn btn-primary" v-on:click="submit()">Submit</button>
@@ -83,6 +86,7 @@
 <script>
 import Multiselect from "vue-multiselect";
 import Datepicker from "vuejs-datepicker";
+import draggable from "vuedraggable";
 import Vue from "vue";
 // register globally
 Vue.component("multiselect", Multiselect);
@@ -90,7 +94,8 @@ Vue.component("multiselect", Multiselect);
 export default {
   components: {
     Multiselect,
-    Datepicker
+    Datepicker,
+    draggable
   },
   props: {
     fields: Array,
