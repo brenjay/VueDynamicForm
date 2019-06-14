@@ -1,65 +1,66 @@
 <!-- Vue component -->
 <template>
   <div>
-      <table>
-        <ul class="list-group">
-          <draggable v-model="selectedFields" group="fields" @start="drag=true" @end="drag=false">
-            <tr v-for="(row, index) in selectedFields" :key="index">
-              <a
-                href="#"
-                class="list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div class="input-group">
-                  <td>
-                    <label :for="row.code">{{row.name}}: &nbsp;</label>
-                  </td>
+    <table>
+      <ul class="list-group">
+        <draggable v-model="selectedFields" group="fields" @start="drag=true" @end="drag=false">
+          <tr v-for="(row, index) in selectedFields" :key="index">
+            <a
+              href="#"
+              class="list-group-item list-group-item-action flex-column align-items-start"
+            >
+              <div class="input-group">
+                <td>
+                  <label :for="row.code">{{row.name}}: &nbsp;</label>
+                </td>
+                <span class="input-group-btn">
+                  <button
+                    class="btn btn-success"
+                    v-on:click="row.operator = operator(row.operator)"
+                  >{{row.operator}}</button>
+                </span>
+                <td>
+                  <template v-if="row.type === 'array'">
+                    <select class="form-control" :id="row.code" v-model="row.value">
+                      <option
+                        v-for="(option, index) in row.options"
+                        :key="index"
+                        :value="option.value"
+                      >{{option.name}}</option>
+                    </select>
+                  </template>
+                  <template v-else-if="row.type === 'date'">
+                    <datepicker input-class="form-control" :id="row.code" v-model="row.value"></datepicker>
+                  </template>
+                  <template v-else>
+                    <input
+                      class="form-control"
+                      :id="row.code"
+                      :type="row.type"
+                      v-model="row.value"
+                      :value="row.value"
+                    >
+                  </template>
+                </td>
+                <template v-if="row.code != selectedFields[selectedFields.length-1].code">
                   <span class="input-group-btn">
                     <button
-                      class="btn btn-success"
-                      v-on:click="row.operator = operator(row.operator)">
-                        {{row.operator}}
-                    </button>
+                      class="btn btn-warning"
+                      v-on:click="row.after = option(row.after)"
+                    >{{row.after}}</button>
                   </span>
-                  <td>
-                    <template v-if="row.type === 'array'">
-                      <select class="form-control" :id="row.code" v-model="row.value">
-                        <option
-                          v-for="(option, index) in row.options"
-                          :key="index"
-                          :value="option.value"
-                        >{{option.name}}</option>
-                      </select>
-                    </template>
-                    <template v-else-if="row.type === 'date'">
-                      <datepicker input-class="form-control" :id="row.code" v-model="row.value"></datepicker>
-                    </template>
-                    <template v-else>
-                      <input
-                        class="form-control"
-                        :id="row.code"
-                        :type="row.type"
-                        v-model="row.value"
-                        :value="row.value"
-                      >
-                    </template>
-                  </td>
-                  <template v-if="row.code != selectedFields[selectedFields.length-1].code">
-                    <span class="input-group-btn">
-                      <button
-                        class="btn btn-warning"
-                        v-on:click="row.after = option(row.after)"
-                      >{{row.after}}</button>
-                    </span>
-                  </template>
-                <div style="text-align: right; margin-left: auto; font-size:25px; padding-left:10px;">
-                     <i class="icon-move"></i> 
+                </template>
+                <div
+                  style="text-align: right; margin-left: auto; font-size:25px; padding-left:10px;"
+                >
+                  <i class="icon-move"></i>
                 </div>
-                </div>
-              </a>
-            </tr>
-          </draggable>
-        </ul>
-      </table>
+              </div>
+            </a>
+          </tr>
+        </draggable>
+      </ul>
+    </table>
     <button class="btn btn-primary" v-on:click="submit()">Submit</button>
     <br>
     <br>
@@ -138,12 +139,17 @@ export default {
     submit() {
       console.log(
         this.selectedFields.map(a => {
-          return { name: a.name, value: a.value, operator: a.operator, after: a.after };
+          return {
+            name: a.name,
+            value: a.value,
+            operator: a.operator,
+            after: a.after
+          };
         })
       );
     },
     option(string) {
-      var list = ["AND", "OR", "NOT"];
+      var list = ["AND", "OR"];
       if (list.indexOf(string) !== -1) {
         var index = list.indexOf(string);
         return list[index + 1] ? list[index + 1] : list[0];
@@ -152,7 +158,7 @@ export default {
       }
     },
     operator(string) {
-      var list = ["=", "=!", ">", "<", "~"];
+      var list = ["=", "=!", ">", ">=", "<", "<=", "~"];
       if (list.indexOf(string) !== -1) {
         var index = list.indexOf(string);
         return list[index + 1] ? list[index + 1] : list[0];
