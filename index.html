@@ -16,18 +16,24 @@
         type: 'array',
         value: null,
         options: [{value: 1, name: 'test'},{value: 2, name: 'test2'}],
+        after: 'AND',
+        operator: '=',
       },
       {
         name: 'Issue Type',
         code: 'AX',
         type: 'option',
         value: null,
+        after: 'AND',
+        operator: '=',
       },
       {
         name: 'Due Date',
         code: 'AS',
         type: 'date',
         value: null,
+        after: 'AND',
+        operator: '=',
       }
       ]"
         :show="[]"
